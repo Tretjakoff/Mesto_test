@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 public class MestoTest {
     String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWZlYjFiNjgyMGZmYzAwM2QxM2M0MDMiLCJpYXQiOjE2NTA0Mzk5OTgsImV4cCI6MTY1MTA0NDc5OH0.qpvMocGFuNGSl68SP5mPSGn5jKtYWLUzg-rMRqFDWxA";
@@ -13,6 +14,16 @@ public class MestoTest {
     @Before
     public void setUp() {
         RestAssured.baseURI = "https://qa-mesto.praktikum-services.ru";
+    }
+
+    @Test
+    @DisplayName("Check user name")
+    @Description("This test is for check current user's name.")
+    public void checkUserName() {
+        given()
+                .auth().oauth2(bearerToken) // Передаём токен для аутентификации
+                .get("/api/users/me") // Делаем GET-запрос
+                .then().assertThat().body("data.name", equalTo("Incorrect Name")); // Проверяем, что имя соответствует ожидаемому
     }
 
     @Test
